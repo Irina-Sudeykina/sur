@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Recipient
+from .models import Recipient, Message, Mailing
 
 
 @admin.register(Recipient)
@@ -11,4 +11,26 @@ class RecipientAdmin(admin.ModelAdmin):
         "email",
         "name",
         "comment",
+    )
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ("id", "subject", "body")
+    list_filter = ("subject", "body",)
+    search_fields = (
+        "subject",
+        "body",
+    )
+
+
+@admin.register(Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    list_display = ("id", "start_time", "end_time", "message", "status")
+    list_filter = ("start_time", "end_time", "message", "status",)
+    search_fields = (
+        "start_time",
+        "end_time",
+        "message",
+        "status",
     )

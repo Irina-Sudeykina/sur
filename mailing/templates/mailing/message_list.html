@@ -1,0 +1,40 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+
+{% block header %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Сервис управления рассылками</h1>
+    <p class="lead">Сервис управления рассылками - это платформа для создания, отправки и анализа маркетинговых сообщений, 
+    помогающие автоматизировать коммуникации, сегментировать аудиторию и повышать конверсию</p>
+    <p><a class="btn btn-outline-primary" href="{% url 'mailing:message_create' %}" role="button">Добавить Сообщение</a></p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Тема письма</th>
+              <th scope="col">Тело письма</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for mess in object_list %}
+            <tr>
+              <th scope="row">{{ mess.id }}</th>
+              <td>{{ mess.subject }}</td>
+              <td>{{ mess.body|truncatechars:100 }}</td>
+              <td>
+                <a class="btn btn-outline-primary btn-sm" href="{% url 'mailing:message_detail' mess.pk %}" role="button">Подробнее</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

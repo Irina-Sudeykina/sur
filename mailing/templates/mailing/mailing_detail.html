@@ -14,14 +14,16 @@
   <div class="row g-0">
     <div class="col-md-12">
       <div class="card-body ms-4">
-        <h3 class="card-title mb-3">{{ recipient.name }}</h3>
-        <h5 class="card-text mb-3">{{ recipient.email }}</h5>
-        <p class="card-text">{{ recipient.comment }}</p>
+        <h3 class="card-title mb-3">{{ mailing.start_time }} - {{ mailing.end_time }}</h3>
+        <p class="card-text"><b>Тема:</b> {{ mailing.message.subject }}</p>
+        <p class="card-text">{{ mailing.message.body }}</p>
+        <p class="card-text"><b>Статус:</b> {{ mailing.status }}</p>
+        <p class="card-text"><b>Получатели:</b> {{ mailing.recipients }}</p>
         <div class="btn-group">
-            <a class="btn btn-outline-primary" href="{% url 'mailing:recipient_list' %}" role="button">Назад</a>
-            <!-- {% if 'mailing.can_unpublish_recipient' in perms or user == recipient.owner %} -->
-            <a class="btn btn-outline-primary" href="{% url 'mailing:recipient_update' recipient.pk %}" role="button">Редактировать</a>
-            <a class="btn btn-outline-danger" href="{% url 'mailing:recipient_delete' recipient.pk %}" role="button">Удалить</a>
+            <a class="btn btn-outline-primary" href="{% url 'mailing:mailing_list' %}" role="button">Назад</a>
+            <!-- {% if 'mailing.can_unpublish_message' in perms or user == message.owner %} -->
+            <a class="btn btn-outline-primary" href="#" role="button">Редактировать</a>
+            <a class="btn btn-outline-danger" href="#" role="button">Удалить</a>
             <!-- {% endif %} -->
         </div>
       </div>

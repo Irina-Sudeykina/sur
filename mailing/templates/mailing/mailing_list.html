@@ -1,0 +1,44 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+
+{% block header %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Сервис управления рассылками</h1>
+    <p class="lead">Сервис управления рассылками - это платформа для создания, отправки и анализа маркетинговых сообщений, 
+    помогающие автоматизировать коммуникации, сегментировать аудиторию и повышать конверсию</p>
+    <p><a class="btn btn-outline-primary" href="#" role="button">Добавить Рассылку</a></p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Дата и время начала отправки</th>
+              <th scope="col">Дата и время окончания отправки</th>
+              <th scope="col">Сообщение</th>
+              <th scope="col">Статус</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for mailing in object_list %}
+            <tr>
+              <th scope="row">{{ mailing.id }}</th>
+              <td>{{ mailing.start_time }}</td>
+              <td>{{ mailing.end_time }}</td>
+              <td>{{ mailing.message }}</td>
+              <td>{{ mailing.status }}</td>
+              <td>
+                <a class="btn btn-outline-primary btn-sm" href="{% url 'mailing:mailing_detail' mailing.pk %}" role="button">Подробнее</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

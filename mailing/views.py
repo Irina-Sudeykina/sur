@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.models import Recipient
-from .forms import RecipientForm
+from mailing.models import Recipient, Message, Mailing
+from .forms import RecipientForm, MessageForm
 
 
 class RecipientListView(ListView):
@@ -66,3 +66,40 @@ class RecipientDeleteView(DeleteView):
         # if obj.owner != self.request.user and not self.request.user.has_perm("mailing.delete_Recipient"):
             # raise PermissionDenied("Только владельцы и модераторы могут удалить клиента.")
         # return super().dispatch(request, *args, **kwargs)
+
+
+class MessageListView(ListView):
+    model = Message
+
+
+class MessageDetailView(DetailView):
+    model = Message
+
+
+class MessageCreateView(CreateView):
+    model = Message
+    form_class = MessageForm
+    success_url = reverse_lazy("mailing:message_list")
+
+
+class MessageUpdateView(UpdateView):
+    model = Message
+    form_class = MessageForm
+    success_url = reverse_lazy("mailing:message_list")
+
+    def get_success_url(self):
+        return reverse("mailing:message_detail", args=[self.kwargs.get("pk")])
+
+
+class MessageDeleteView(DeleteView):
+    model = Message
+    success_url = reverse_lazy("mailing:message_list")
+    permission_required = "mailing.delete_message"
+
+
+class MailingListView(ListView):
+    model = Mailing
+
+
+class MailingDetailView(DetailView):
+    model = Mailing

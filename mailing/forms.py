@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Recipient
+from .models import Recipient, Message
 
 
 class StyleFormMixin:
@@ -17,4 +17,10 @@ class StyleFormMixin:
 class RecipientForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Recipient
+        exclude = ("owner",)
+
+
+class MessageForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Message
         exclude = ("owner",)
