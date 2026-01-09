@@ -4,7 +4,6 @@ from django.db import models
 from django.utils.timezone import now as timezone_now
 from django.core.exceptions import ValidationError
 
-
 class Recipient(models.Model):
     email = models.EmailField(unique=True, verbose_name='Email')
     name = models.CharField(max_length=100, verbose_name="Ф.И.О.", help_text="Введите Ф.И.О.")
@@ -100,9 +99,29 @@ class Mailing(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматическое обновление статуса при сохранении."""
-        self.full_clean()  # Выполняем проверку валидности полей
         super().save(*args, **kwargs)
         self.update_status()  # Обновляем статус сразу после сохранения
 
     def __str__(self):
         return f"Рассылка {self.id}: {self.message.subject}"
+
+
+class AttemptLog(models.Model):
+    attempt_time = models.DateTimeField(default=timezone_now, verbose_name="Дата и время попытки")
+    status = models.CharField(max_length=20, choices=[
+        ('successful', 'Успешно'),
+        ('unsuccessful', 'Не успешно'),
+    ], verbose_name="Статус")
+    server_response = models.TextField(blank=True, verbose_name="Ответ почтового сервера")
+    mailing = models.ForeignKey('Mailing', on_delete=models.CASCADE, verbose_name="Рассылка")
+
+    class Meta:
+            verbose_name = "Попытка рассылки"
+            verbose_name_plural = "Попытки рассылки"
+            ordering = [
+                "attempt_time",
+                "status",
+            ]
+
+    def __str__(self):
+        return f'{self.attempt_time}: {self.status}'

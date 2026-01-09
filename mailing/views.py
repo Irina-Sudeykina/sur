@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 
 from mailing.models import Recipient, Message, Mailing
 from .forms import RecipientForm, MessageForm, MailingForm
+from .services import send_messages_by_request
 
 
 class RecipientListView(ListView):
@@ -104,6 +107,11 @@ class MailingListView(ListView):
 class MailingDetailView(DetailView):
     model = Mailing
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.update_status()  # пересчёт и сохранение статуса
+        return obj
+
 
 class MailingCreateView(CreateView):
     model = Mailing
@@ -124,3 +132,17 @@ class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy("mailing:mailing_list")
     permission_required = "mailing.delete_mailing"
+
+
+def send_mailing(request, pk):
+    mailing = get_object_or_404(Mailing, id=pk)
+    
+    if request.method == 'POST':
+        result = send_messages_by_request(mailing)
+        if result is False:
+            messages.error(request, 'Рассылка не доступна в данное время!')
+        else:
+            messages.success(request, 'Рассылка успешно запущена!')
+        return HttpResponseRedirect(reverse('mailing:mailing_detail', kwargs={'pk': pk}))
+    
+    return render(request, 'mailing/send_confirmation.html', {'mailing': mailing})
