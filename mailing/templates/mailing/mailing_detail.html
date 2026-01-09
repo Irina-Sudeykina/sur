@@ -14,16 +14,40 @@
   <div class="row g-0">
     <div class="col-md-12">
       <div class="card-body ms-4">
-        <h3 class="card-title mb-3">{{ mailing.start_time }} - {{ mailing.end_time }}</h3>
+        <h3 class="card-title mb-3">{{ mailing.start_time|date:"d M Y" }} {{ mailing.start_time|time:"H:i" }} - 
+                                    {{ mailing.end_time|date:"d M Y" }} {{ mailing.end_time|time:"H:i" }}</h3>
         <p class="card-text"><b>Тема:</b> {{ mailing.message.subject }}</p>
         <p class="card-text">{{ mailing.message.body }}</p>
         <p class="card-text"><b>Статус:</b> {{ mailing.status }}</p>
-        <p class="card-text"><b>Получатели:</b> {{ mailing.recipients }}</p>
+        
+        <p class="card-text"><b>Получатели:</b></p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Ф.И.О.</th>
+              <th scope="col">Email</th>
+              <th scope="col">Комментарий</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for recipient in mailing.recipients.all %}
+            <tr>
+              <th scope="row">{{ recipient.id }}</th>
+              <td>{{ recipient.name }}</td>
+              <td>{{ recipient.email }}</td>
+              <td>{{ recipient.comment|truncatechars:100 }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        
         <div class="btn-group">
             <a class="btn btn-outline-primary" href="{% url 'mailing:mailing_list' %}" role="button">Назад</a>
-            <!-- {% if 'mailing.can_unpublish_message' in perms or user == message.owner %} -->
-            <a class="btn btn-outline-primary" href="#" role="button">Редактировать</a>
-            <a class="btn btn-outline-danger" href="#" role="button">Удалить</a>
+            <!-- {% if 'mailing.can_unpublish_message' in perms or user == mailing.owner %} -->
+            <a class="btn btn-outline-primary" href="{% url 'mailing:mailing_update' mailing.pk %}" role="button">Редактировать</a>
+            <a class="btn btn-outline-danger" href="{% url 'mailing:mailing_delete' mailing.pk %}" role="button">Удалить</a>
             <!-- {% endif %} -->
         </div>
       </div>

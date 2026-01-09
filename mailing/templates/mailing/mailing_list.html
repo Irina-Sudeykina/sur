@@ -6,7 +6,7 @@
     <h1 class="display-4">Сервис управления рассылками</h1>
     <p class="lead">Сервис управления рассылками - это платформа для создания, отправки и анализа маркетинговых сообщений, 
     помогающие автоматизировать коммуникации, сегментировать аудиторию и повышать конверсию</p>
-    <p><a class="btn btn-outline-primary" href="#" role="button">Добавить Рассылку</a></p>
+    <p><a class="btn btn-outline-primary" href="{% url 'mailing:mailing_create' %}" role="button">Добавить Рассылку</a></p>
 </div>
 {% endblock %}
 
@@ -28,8 +28,8 @@
             {% for mailing in object_list %}
             <tr>
               <th scope="row">{{ mailing.id }}</th>
-              <td>{{ mailing.start_time }}</td>
-              <td>{{ mailing.end_time }}</td>
+              <td>{{ mailing.start_time|date:"d M Y" }} {{ mailing.start_time|time:"H:i" }}</td>
+              <td>{{ mailing.end_time|date:"d M Y" }} {{ mailing.end_time|time:"H:i" }}</td>
               <td>{{ mailing.message }}</td>
               <td>{{ mailing.status }}</td>
               <td>

@@ -3,7 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from mailing.models import Recipient, Message, Mailing
-from .forms import RecipientForm, MessageForm
+from .forms import RecipientForm, MessageForm, MailingForm
 
 
 class RecipientListView(ListView):
@@ -103,3 +103,24 @@ class MailingListView(ListView):
 
 class MailingDetailView(DetailView):
     model = Mailing
+
+
+class MailingCreateView(CreateView):
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy("mailing:mailing_list")
+
+
+class MailingUpdateView(UpdateView):
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy("mailing:mailing_list")
+
+    def get_success_url(self):
+        return reverse("mailing:mailing_detail", args=[self.kwargs.get("pk")])
+
+
+class MailingDeleteView(DeleteView):
+    model = Mailing
+    success_url = reverse_lazy("mailing:mailing_list")
+    permission_required = "mailing.delete_mailing"
